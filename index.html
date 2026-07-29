@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>배민라이더 식사 배-네핏 설문</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+  :root{
+    --mint:#2AC1BC; --mint-deep:#12A29D; --mint-ink:#0C6E6A;
+    --mint-wash:#E9F9F8; --mint-wash2:#D6F3F1; --coral:#FF8A5B;
+    --ink:#12312F; --ink-soft:#4A6360; --line:#D9ECEA;
+    --paper:#FBFEFD; --white:#FFFFFF; --star:#FFC53D;
+    --shadow:0 10px 34px rgba(18,162,157,.16); --shadow-sm:0 3px 12px rgba(18,162,157,.10); --r:20px;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo','Malgun Gothic',sans-serif;
+    background:radial-gradient(1200px 460px at 50% -160px, var(--mint-wash) 0%, rgba(233,249,248,0) 70%),linear-gradient(180deg,#F2FBFA 0%, #FBFEFD 34%);
+    color:var(--ink);line-height:1.62;-webkit-font-smoothing:antialiased;min-height:100vh;
+  }
+  .wrap{max-width:520px;margin:0 auto;padding:0 18px 64px;}
+  .topbar{position:sticky;top:0;z-index:20;background:linear-gradient(180deg,#FBFEFD 62%,rgba(251,254,253,0));padding:14px 18px 10px;max-width:520px;margin:0 auto;}
+  .prog-row{display:flex;align-items:center;gap:10px;}
+  .prog-track{flex:1;height:7px;border-radius:99px;background:var(--mint-wash2);overflow:hidden;}
+  .prog-fill{height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,var(--mint),var(--mint-deep));transition:width .4s cubic-bezier(.4,0,.2,1);}
+  .prog-label{font-size:12.5px;font-weight:700;color:var(--mint-ink);min-width:38px;text-align:right;font-variant-numeric:tabular-nums;}
+  .card{background:var(--white);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow-sm);padding:22px 20px;margin-top:16px;animation:rise .45s cubic-bezier(.2,.7,.2,1) both;}
+  @keyframes rise{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:none;}}
+  .intro{text-align:center;padding-top:26px;}
+  .char-stage{position:relative;width:190px;height:190px;margin:0 auto 6px;}
+  .char-blob{position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 50% 42%,var(--mint-wash) 0%,var(--mint-wash2) 66%,#C6EEEB 100%);animation:breathe 4.5s ease-in-out infinite;}
+  @keyframes breathe{0%,100%{transform:scale(1);}50%{transform:scale(1.045);}}
+  .char{position:absolute;inset:0;animation:bob 3.4s ease-in-out infinite;}
+  @keyframes bob{0%,100%{transform:translateY(0);}50%{transform:translateY(-7px);}}
+  .waving{transform-box:fill-box;transform-origin:70% 90%;animation:wave 2.4s ease-in-out infinite;}
+  @keyframes wave{0%,60%,100%{transform:rotate(0);}70%{transform:rotate(-18deg);}80%{transform:rotate(6deg);}90%{transform:rotate(-14deg);}}
+  .intro h1{font-size:23px;font-weight:800;letter-spacing:-.4px;margin:14px 0 2px;color:var(--ink);}
+  .intro .badge{display:inline-flex;align-items:center;gap:6px;background:var(--mint-wash);color:var(--mint-ink);font-size:12.5px;font-weight:700;padding:6px 13px;border-radius:99px;margin-bottom:4px;}
+  .speech{text-align:left;background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:20px 19px;margin:20px 0 8px;font-size:15.5px;color:var(--ink-soft);position:relative;}
+  .speech:before{content:"";position:absolute;top:-9px;left:38px;width:18px;height:18px;background:var(--paper);border-left:1px solid var(--line);border-top:1px solid var(--line);transform:rotate(45deg);}
+  .speech b{color:var(--mint-ink);font-weight:800;}
+  .speech .em{color:var(--coral);font-weight:800;}
+  .speech p{margin:0 0 13px;}
+  .speech p:last-child{margin-bottom:0;}
+  .sign{font-weight:800;color:var(--ink);}
+  .btn{display:block;width:100%;border:0;cursor:pointer;font-family:inherit;font-size:16.5px;font-weight:800;letter-spacing:-.2px;padding:16px;border-radius:15px;transition:transform .12s,box-shadow .2s,background .2s;}
+  .btn-primary{background:linear-gradient(180deg,var(--mint) 0%,var(--mint-deep) 100%);color:#fff;box-shadow:var(--shadow);}
+  .btn-primary:active{transform:translateY(1px) scale(.995);}
+  .btn-primary[disabled]{background:#C6E7E5;box-shadow:none;cursor:not-allowed;color:#EAF7F6;}
+  .btn-ghost{background:var(--mint-wash);color:var(--mint-ink);}
+  .btn-ghost:active{transform:translateY(1px);}
+  .btn-row{display:flex;gap:10px;margin-top:18px;}
+  .btn-row .btn{margin:0;}
+  .btn-row .btn-ghost{flex:0 0 40%;}
+  .btn-row .btn-primary{flex:1;}
+  .q-head{display:flex;gap:9px;align-items:flex-start;margin-bottom:15px;}
+  .q-no{flex:none;width:25px;height:25px;border-radius:9px;background:var(--mint);color:#fff;font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;margin-top:1px;font-variant-numeric:tabular-nums;}
+  .q-title{font-size:17.5px;font-weight:800;letter-spacing:-.3px;line-height:1.45;}
+  .q-sub{font-size:13px;color:var(--ink-soft);font-weight:600;margin:2px 0 0 34px;}
+  .opts{display:flex;flex-direction:column;gap:9px;margin-top:4px;}
+  .opt{display:flex;align-items:center;gap:11px;border:1.6px solid var(--line);border-radius:14px;padding:14px 15px;cursor:pointer;background:var(--white);transition:border-color .15s,background .15s,transform .1s;font-size:15.5px;font-weight:600;color:var(--ink);}
+  .opt:active{transform:scale(.99);}
+  .opt .mark{flex:none;width:22px;height:22px;border-radius:50%;border:2px solid var(--line);position:relative;transition:.15s;}
+  .opt.cbx .mark{border-radius:7px;}
+  .opt.sel{border-color:var(--mint);background:var(--mint-wash);color:var(--mint-ink);font-weight:700;}
+  .opt.sel .mark{border-color:var(--mint);background:var(--mint);}
+  .opt.sel .mark:after{content:"";position:absolute;left:6px;top:2.5px;width:6px;height:11px;border:solid #fff;border-width:0 2.6px 2.6px 0;transform:rotate(45deg);}
+  .opt.cbx.sel .mark:after{left:6px;top:2px;}
+  .opt.disabled{opacity:.42;pointer-events:none;}
+  .etc-input{margin-top:9px;animation:rise .3s both;}
+  .etc-input input{width:100%;font-family:inherit;font-size:15px;color:var(--ink);border:1.6px solid var(--mint);border-radius:12px;padding:12px 14px;background:#fff;}
+  .etc-input input:focus{outline:none;}
+  .stars{display:flex;justify-content:center;gap:8px;margin:10px 0 4px;}
+  .star{width:52px;height:52px;cursor:pointer;transition:transform .12s;}
+  .star:active{transform:scale(.9);}
+  .star svg{width:100%;height:100%;display:block;}
+  .star .fill{fill:#E4EFEE;transition:fill .15s;}
+  .star.on .fill{fill:var(--star);}
+  .star-label{text-align:center;font-size:14px;font-weight:700;color:var(--mint-ink);min-height:20px;margin-top:4px;}
+  textarea{width:100%;font-family:inherit;font-size:15.5px;color:var(--ink);border:1.6px solid var(--line);border-radius:14px;padding:13px 14px;resize:none;background:var(--paper);transition:border-color .15s;min-height:88px;}
+  textarea:focus{outline:none;border-color:var(--mint);background:#fff;}
+  .optional-tag{font-size:12px;font-weight:700;color:var(--mint);margin-left:6px;}
+  .hint{font-size:12.5px;color:var(--coral);font-weight:700;margin-top:10px;min-height:16px;text-align:center;}
+  .done{text-align:center;padding-top:34px;}
+  .done h1{font-size:24px;font-weight:800;margin:16px 0 6px;letter-spacing:-.4px;}
+  .done p{font-size:15.5px;color:var(--ink-soft);margin:0;}
+  .confetti{position:fixed;inset:0;pointer-events:none;z-index:50;overflow:hidden;}
+  .cf{position:absolute;width:9px;height:14px;opacity:0;border-radius:2px;}
+  .spin{width:26px;height:26px;border:3px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;display:inline-block;vertical-align:middle;animation:sp .7s linear infinite;}
+  @keyframes sp{to{transform:rotate(360deg);}}
+  .foot{text-align:center;font-size:12px;color:#9DB8B5;margin-top:26px;font-weight:600;}
+  @media (prefers-reduced-motion: reduce){*{animation:none !important;transition:none !important;}}
+</style>
+</head>
+<body>
+<div class="topbar" id="topbar" style="display:none;">
+  <div class="prog-row"><div class="prog-track"><div class="prog-fill" id="progFill"></div></div><div class="prog-label" id="progLabel">0%</div></div>
+</div>
+<div class="wrap" id="app"></div>
+<div class="confetti" id="confetti"></div>
+
+<script>
+/* ========== 설정 ========== */
+const ENDPOINT = "PASTE_YOUR_APPS_SCRIPT_WEBAPP_URL_HERE";
+// 그룹 구분: 전체 사용건수 기준  a1=헤비(3회+) / b2=라이트(1~2회) / c3=미사용(0회)
+const GROUP_MAP = { a1:"heavy", b2:"light", c3:"none" };
+
+/* ========== 공통 문항 조각 ========== */
+const SCORE = { id:"score", type:"stars", title:"이번 식사 배-네핏, 별점을 준다면?" };
+
+// 이용자(헤비·라이트)용 — 혜택 이용 타이밍으로 콜드 방문 패턴 파악
+const MEAL = [
+  { id:"meal_how", type:"radio", title:"평소 배달 중 끼니는 주로 어떻게 해결하시나요?",
+    opts:["집에 가서 먹는다","편의점·간편식으로 때운다","식당에서 사먹는다","자주 거르는 편이다"] },
+  { id:"benefit_when", type:"radio", title:"혜택은 주로 언제 이용하셨나요?",
+    opts:["배달을 시작하기 전에 (밥 먼저 먹고 시작)","배달 중간 짬이 날 때","배달을 마치고 나서","배달과 상관없이 식사만 하러"] },
+];
+// 미사용자용 — 혜택을 안 썼으므로 식사 타이밍만 조사
+const MEAL_NONE = [
+  { id:"meal_how", type:"radio", title:"평소 배달 중 끼니는 주로 어떻게 해결하시나요?",
+    opts:["집에 가서 먹는다","편의점·간편식으로 때운다","식당에서 사먹는다","자주 거르는 편이다"] },
+  { id:"meal_when", type:"radio", title:"식사는 주로 언제 하시나요?",
+    opts:["배달 시작 전","피크 사이 짬이 날 때","배달을 마친 후","불규칙하다"] },
+];
+
+const NEED = { id:"need", type:"checkbox", max:2, etc:true,
+  title:"앞으로 배달활동 중 제공받고 싶은 혜택을 넓힌다면?",
+  sub:"가장 필요한 혜택을 최대 2개까지 골라주세요",
+  opts:["식음(식당·카페)","정비(엔진오일 등)","주유","기타"] };
+
+const FREE = { id:"free", type:"text", optional:true,
+  title:"마지막으로, 남겨주고 싶은 이야기가 있다면 적어주세요",
+  sub:"자유롭게 편하게 적어주세요 (선택)", ph:"어떤 이야기든 좋아요 :)" };
+
+const GOOD = { id:"good", type:"checkbox", max:3, etc:true,
+  title:"어떤 점이 좋으셨나요?",
+  sub:"가장 좋았던 점을 최대 3개까지 골라주세요",
+  opts:["식비를 아낄 수 있어서","메뉴·가게 선택지가 좋아서","사용이 편해서","챙김받는 느낌이 들어서","시원한 가게에서 잠시 쉴 수 있어서","주 활동 지역에서 가까워서","기타"] };
+
+const IMPROVE = { id:"improve", type:"checkbox", max:3, etc:true,
+  title:"개선이 필요한 점이 있다면?",
+  sub:"최대 3개까지 골라주세요",
+  opts:["제휴 가게(식당·카페)가 적다","사용 방법이 번거롭다","혜택 금액이 아쉽다","이용 시간대 제약이 있다","주 활동 지역에서 멀었다","기타"] };
+
+/* ========== 그룹별 설문 ========== */
+const SURVEYS = {
+  /* ---------- 헤비 (3회+) ---------- */
+  heavy: [
+    SCORE,
+    { id:"use_food", type:"radio", title:"식당은 얼마나 이용하셨나요?",
+      opts:["이용 안 함","1~2회","3회 이상"], skipNextIf:"이용 안 함" },
+    { id:"best_food", type:"text", optional:true, title:"가장 마음에 든 식당이 있나요?",
+      sub:"가게 이름과 이유를 자유롭게 적어주세요 (선택)", ph:"예) OO분식 — 양이 푸짐하고 빨리 나와서" },
+    { id:"use_cafe", type:"radio", title:"카페는 얼마나 이용하셨나요?",
+      opts:["이용 안 함","1~2회","3회 이상"], skipNextIf:"이용 안 함" },
+    { id:"best_cafe", type:"text", optional:true, title:"가장 마음에 든 카페가 있나요?",
+      sub:"가게 이름과 이유를 자유롭게 적어주세요 (선택)", ph:"예) OO커피 — 아이스 종류가 많아서" },
+    { id:"conv", type:"radio", title:"혜택 사용 방식은 편하셨나요?",
+      opts:["매우 편했다","대체로 편했다","보통이다","다소 불편했다","매우 불편했다"] },
+    GOOD,
+    IMPROVE,
+    { id:"share", type:"radio", title:"이 혜택을 주변 라이더에게 소개한 적 있으신가요?",
+      opts:["여러 번 있다","한두 번 있다","없다"] },
+    ...MEAL,
+    NEED,
+    { id:"area", type:"radio", title:"원래도 석촌동·송파동에서 주로 활동하시나요?",
+      opts:["예, 주 활동 지역이다","가끔 오는 편이다","이 혜택을 계기로 오게 됐다"] },
+    FREE,
+  ],
+
+  /* ---------- 라이트 (1~2회) : 횟수 문항 제외 ---------- */
+  light: [
+    SCORE,
+    { id:"best_place", type:"text", optional:true, title:"가장 마음에 든 가게가 있었나요?",
+      sub:"식당·카페 이름과 이유를 자유롭게 적어주세요 (선택)", ph:"예) OO분식 — 양이 푸짐해서" },
+    { id:"why_less", type:"checkbox", max:3, etc:true, title:"더 자주 이용하지 못한 이유가 있다면?",
+      sub:"최대 3개까지 골라주세요",
+      opts:["배달 동선과 맞지 않아서","원하는 가게가 없어서","사용 방법이 번거로워서","쓰고 싶었지만 기회가 부족해서","혜택 금액이 아쉬워서","기타"] },
+    { id:"good", type:"checkbox", max:3, etc:true, title:"그럼에도 좋았던 점이 있다면?",
+      sub:"최대 3개까지 골라주세요",
+      opts:["식비를 아낄 수 있어서","메뉴·가게 선택지가 좋아서","사용이 편해서","챙김받는 느낌이 들어서","시원한 가게에서 잠시 쉴 수 있어서","주 활동 지역에서 가까워서","기타"] },
+    { id:"share", type:"radio", title:"이 혜택을 주변 라이더에게 소개한 적 있으신가요?",
+      opts:["있다","없다"] },
+    ...MEAL,
+    NEED,
+    { id:"area", type:"radio", title:"원래도 석촌동·송파동에서 주로 활동하시나요?",
+      opts:["예","가끔 온다","이 혜택을 계기로 알게 됐다"] },
+    FREE,
+  ],
+
+  /* ---------- 미사용 (0회) ---------- */
+  none: [
+    { id:"aware", type:"radio", title:"이 혜택이 제공된다는 것을 알고 계셨나요?",
+      opts:["알고 있었다","문자는 받았지만 잊고 있었다","전혀 몰랐다"] },
+    { id:"why_not", type:"checkbox", max:3, etc:true, title:"이용하지 않으신 이유가 있다면?",
+      sub:"최대 3개까지 골라주세요",
+      opts:["배달 동선과 맞지 않아서","원하는 가게가 없어서","사용 방법이 번거로워 보여서","혜택이 매력적이지 않아서","시간이 없어서","문자가 온 줄 몰랐다","문자는 봤지만 찾기가 어려워 포기했다","기타"] },
+    { id:"score", type:"stars", title:"이용은 안 하셨더라도, 혜택 자체에 별점을 준다면?",
+      sub:"인상만으로 편하게 매겨주세요" },
+    { id:"improve_use", type:"checkbox", max:3, etc:true, title:"어떤 점이 나아지면 이용해 보시겠어요?",
+      sub:"최대 3개까지 골라주세요",
+      opts:["제휴 가게(식당·카페) 확대","사용 방법 간소화","혜택 금액 상향","이용 시간대 확대","안내를 더 눈에 띄게","기타"] },
+    ...MEAL_NONE,
+    NEED,
+    { id:"area", type:"radio", title:"원래도 석촌동·송파동에서 주로 활동하시나요?",
+      opts:["예","가끔 온다","아니다"] },
+    FREE,
+  ],
+};
+
+/* ========== 캐릭터 (귀엽게 리뉴얼) ========== */
+const CHARACTER = `
+<svg class="char" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <ellipse cx="100" cy="176" rx="42" ry="7" fill="#0C6E6A" opacity="0.12"/>
+  <!-- body -->
+  <path d="M66 178 Q62 138 100 138 Q138 138 134 178 Z" fill="#2AC1BC"/>
+  <path d="M66 178 Q62 138 100 138 Q116 138 126 148 L74 172 Q68 176 66 178Z" fill="#39CFCA" opacity=".55"/>
+  <!-- scarf -->
+  <path d="M80 142 Q100 154 120 142 L118 151 Q100 160 82 151 Z" fill="#FF8A5B"/>
+  <!-- left arm -->
+  <path d="M72 150 Q56 158 55 176 Q55 182 61 181 Q67 179 68 173 Q71 160 78 156 Z" fill="#2AC1BC"/>
+  <!-- right arm waving -->
+  <g class="waving">
+    <path d="M128 150 Q148 148 156 132 Q159 126 153 123 Q147 123 143 129 Q137 142 126 144 Z" fill="#2AC1BC"/>
+    <circle cx="154" cy="125" r="9.5" fill="#FFE0BC"/>
+  </g>
+  <!-- head (big & round) -->
+  <circle cx="100" cy="90" r="46" fill="#FFE0BC"/>
+  <!-- cheeks -->
+  <circle cx="74" cy="100" r="8.5" fill="#FF8A5B" opacity=".42"/>
+  <circle cx="126" cy="100" r="8.5" fill="#FF8A5B" opacity=".42"/>
+  <!-- eyes (well below the helmet brim) -->
+  <ellipse cx="86" cy="94" rx="6" ry="7" fill="#26312F"/>
+  <ellipse cx="114" cy="94" rx="6" ry="7" fill="#26312F"/>
+  <circle cx="88.4" cy="91.4" r="2.1" fill="#fff"/>
+  <circle cx="116.4" cy="91.4" r="2.1" fill="#fff"/>
+  <!-- smile -->
+  <path d="M88 108 Q100 118 112 108" stroke="#26312F" stroke-width="3.6" fill="none" stroke-linecap="round"/>
+  <!-- helmet sits high, brim above the eyes -->
+  <path d="M58 74 A42 42 0 0 1 142 74 L142 78 L58 78 Z" fill="#12A29D"/>
+  <path d="M58 74 A42 42 0 0 1 142 74 Q100 68 58 74Z" fill="#2AC1BC"/>
+  <path d="M56 74 Q100 66 144 74 L144 80 Q100 73 56 80 Z" fill="#0C6E6A"/>
+  <!-- helmet top button -->
+  <circle cx="100" cy="46" r="5" fill="#FF8A5B"/>
+  <path d="M100 51 L100 60" stroke="#FF8A5B" stroke-width="3" stroke-linecap="round"/>
+</svg>`;
+
+/* ========== 로직 ========== */
+const app=document.getElementById('app'), topbar=document.getElementById('topbar');
+const progFill=document.getElementById('progFill'), progLabel=document.getElementById('progLabel');
+const params=new URLSearchParams(location.search);
+const gCode=(params.get('g')||'').toLowerCase();
+const group=GROUP_MAP[gCode]||'heavy';
+const questions=SURVEYS[group];
+let idx=-1;
+const answers={};       // id -> value
+const etcText={};       // id -> 기타 입력값
+let skipSet=new Set();  // 조건부 건너뛸 문항 index
+
+function setProgress(){
+  if(idx<0){topbar.style.display='none';return;}
+  topbar.style.display='block';
+  const pct=Math.round((idx/questions.length)*100);
+  progFill.style.width=pct+'%';progLabel.textContent=pct+'%';
+}
+
+/* 인트로 문구: 그룹별 */
+const INTRO = {
+  heavy: {
+    h:"라이더님, 안녕하세요!",
+    body:`<p>식사 배-네핏, 잘 이용하셨나요?</p>
+      <p>라이더님을 위해 준비한 혜택을 <b>많은 라이더님이 찾아주셔서</b> 저는 참 기쁜 마음이에요. 그만큼 꼭 필요한 혜택이었다는 뜻이니까요.</p>
+      <p>앞으로도 새로운 제휴 혜택을 계속 발굴해 볼 예정이에요.<br>잠시 시간을 내어 설문에 답해주시면, <span class="em">꼭-</span> 맞는 혜택을 준비하는 데 큰 도움이 됩니다.</p>
+      <p class="sign">감사합니다 🙇</p>`
+  },
+  light: {
+    h:"라이더님, 안녕하세요!",
+    body:`<p>식사 배-네핏, 이용해 보셨네요! 감사합니다.</p>
+      <p>라이더님을 위해 준비한 혜택인데, 조금 더 자주 편하게 쓰실 수 있었다면 좋았을 텐데 하는 마음이에요.</p>
+      <p>어떤 점이 좋았고 또 아쉬우셨는지 들려주시면, 다음엔 <span class="em">꼭-</span> 맞는 혜택으로 준비하겠습니다.</p>
+      <p class="sign">감사합니다 🙇</p>`
+  },
+  none: {
+    h:"라이더님, 안녕하세요!",
+    body:`<p>이번 식사 배-네핏, 미처 이용하지 못하셨네요.</p>
+      <p>라이더님께 <b>꼭 드리고 싶어</b> 준비한 혜택이라 조금 아쉬운 마음이에요.</p>
+      <p>혹시 사용이 불편하셨거나 아쉬운 점이 있었는지 라이더님 이야기를 들려주시면, 다음엔 더 나은 혜택으로 준비하고 싶습니다. 잠깐만 시간을 내어주시면 큰 도움이 됩니다.</p>
+      <p class="sign">감사합니다 🙇</p>`
+  }
+};
+
+function renderIntro(){
+  const t=INTRO[group]||INTRO.heavy;
+  app.innerHTML=`
+    <div class="card intro">
+      <div class="char-stage"><div class="char-blob"></div>${CHARACTER}</div>
+      <span class="badge">🍽️ 식사 배-네핏</span>
+      <h1>${t.h}</h1>
+      <div class="speech">${t.body}</div>
+      <button class="btn btn-primary" id="startBtn">설문 시작하기 (약 2분)</button>
+      <div class="foot">배민커넥트</div>
+    </div>`;
+  document.getElementById('startBtn').onclick=()=>{idx=0;render();};
+}
+
+function renderQuestion(){
+  const q=questions[idx];
+  const saved=answers[q.id];
+  let body='';
+
+  if(q.type==='stars'){
+    body=`<div class="stars" id="stars">`+
+      [1,2,3,4,5].map(n=>`<div class="star ${saved&&saved>=n?'on':''}" data-v="${n}">
+        <svg viewBox="0 0 24 24"><path class="fill" d="M12 2l2.9 6.1 6.6.9-4.8 4.6 1.2 6.6L12 18.6 5.9 20.8 7.1 14.2 2.3 9.6l6.6-.9L12 2z"/></svg>
+      </div>`).join('')+`</div><div class="star-label" id="starLabel"></div>`;
+  }
+  else if(q.type==='radio'){
+    body=`<div class="opts">`+q.opts.map(o=>
+      `<div class="opt ${saved===o?'sel':''}" data-v="${escAttr(o)}"><span class="mark"></span><span>${o}</span></div>`).join('')+`</div>`;
+  }
+  else if(q.type==='checkbox'){
+    const arr=Array.isArray(saved)?saved:[];
+    body=`<div class="opts">`+q.opts.map(o=>
+      `<div class="opt cbx ${arr.includes(o)?'sel':''}" data-v="${escAttr(o)}"><span class="mark"></span><span>${o}</span></div>`).join('')+`</div>`;
+    if(q.etc){
+      const on=arr.includes('기타');
+      body+=`<div class="etc-input" id="etcBox" style="${on?'':'display:none'}">
+        <input type="text" id="etcInput" placeholder="기타 내용을 적어주세요" value="${etcText[q.id]?escAttr(etcText[q.id]):''}"></div>`;
+    }
+  }
+  else if(q.type==='text'){
+    body=`<textarea id="txt" placeholder="${q.ph||''}">${saved?escHtml(saved):''}</textarea>`;
+  }
+
+  const no=idx+1;
+  const optTag=q.optional?`<span class="optional-tag">선택</span>`:'';
+  const sub=q.sub?`<div class="q-sub">${q.sub}</div>`:'';
+  const lastQ=isLast(idx);
+
+  app.innerHTML=`
+    <div class="card">
+      <div class="q-head"><div class="q-no">${no}</div><div class="q-title">${q.title}${optTag}</div></div>
+      ${sub}${body}
+      <div class="hint" id="hint"></div>
+      <div class="btn-row">
+        <button class="btn btn-ghost" id="prevBtn">이전</button>
+        <button class="btn btn-primary" id="nextBtn">${lastQ?'제출하기':'다음'}</button>
+      </div>
+    </div>`;
+  bindQuestion(q);
+  document.getElementById('prevBtn').onclick=goPrev;
+  document.getElementById('nextBtn').onclick=goNext;
+  updateNextState(q);
+  setProgress();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+const STAR_TXT=["","많이 아쉬워요","조금 아쉬워요","괜찮아요","좋아요","최고예요!"];
+function bindQuestion(q){
+  if(q.type==='stars'){
+    const lbl=document.getElementById('starLabel');
+    if(answers[q.id]) lbl.textContent=STAR_TXT[answers[q.id]];
+    app.querySelectorAll('.star').forEach(el=>{
+      el.onclick=()=>{
+        const v=Number(el.dataset.v);answers[q.id]=v;
+        app.querySelectorAll('.star').forEach(s=>s.classList.toggle('on',Number(s.dataset.v)<=v));
+        lbl.textContent=STAR_TXT[v];clearHint();updateNextState(q);
+      };
+    });
+  }
+  else if(q.type==='radio'){
+    app.querySelectorAll('.opt').forEach(el=>{
+      el.onclick=()=>{
+        app.querySelectorAll('.opt').forEach(x=>x.classList.remove('sel'));
+        el.classList.add('sel');answers[q.id]=el.dataset.v;clearHint();updateNextState(q);
+      };
+    });
+  }
+  else if(q.type==='checkbox'){
+    app.querySelectorAll('.opt').forEach(el=>{
+      el.onclick=()=>{
+        let arr=Array.isArray(answers[q.id])?answers[q.id]:[];
+        const v=el.dataset.v;
+        if(arr.includes(v)){arr=arr.filter(x=>x!==v);}
+        else{
+          if(q.max&&arr.length>=q.max){showHint(`최대 ${q.max}개까지 선택할 수 있어요`);return;}
+          arr.push(v);
+        }
+        answers[q.id]=arr;el.classList.toggle('sel');
+        if(q.etc){const box=document.getElementById('etcBox');if(box)box.style.display=arr.includes('기타')?'':'none';}
+        if(q.max)reflectMax(q);
+        clearHint();updateNextState(q);
+      };
+    });
+    if(q.max)reflectMax(q);
+    if(q.etc){const inp=document.getElementById('etcInput');if(inp)inp.oninput=()=>{etcText[q.id]=inp.value;};}
+  }
+  else if(q.type==='text'){
+    const t=document.getElementById('txt');t.oninput=()=>{answers[q.id]=t.value;updateNextState(q);};
+  }
+}
+
+function reflectMax(q){
+  const arr=Array.isArray(answers[q.id])?answers[q.id]:[];
+  const full=q.max&&arr.length>=q.max;
+  app.querySelectorAll('.opt').forEach(el=>{
+    el.classList.toggle('disabled',full&&!el.classList.contains('sel'));
+  });
+}
+
+/* 필수 문항 응답 전엔 다음 버튼 비활성 */
+function isAnswered(q){
+  const v=answers[q.id];
+  if(q.type==='checkbox')return Array.isArray(v)&&v.length>0;
+  if(q.type==='text')return q.optional?true:(v&&v.trim().length>0);
+  return v!==undefined&&v!==null&&v!=='';
+}
+function updateNextState(q){
+  const btn=document.getElementById('nextBtn');if(!btn)return;
+  btn.disabled=!(q.optional||isAnswered(q));
+}
+
+/* 조건부 건너뛰기 반영한 마지막 판정 */
+function isLast(i){
+  for(let j=i+1;j<questions.length;j++){ if(!skipSet.has(j)) return false; }
+  return true;
+}
+function recomputeSkip(){
+  skipSet=new Set();
+  questions.forEach((q,i)=>{
+    if(q.skipNextIf && answers[q.id]===q.skipNextIf) skipSet.add(i+1);
+  });
+}
+
+function goNext(){
+  const q=questions[idx];
+  if(!(q.optional||isAnswered(q))){showHint('답변을 선택해 주세요');return;}
+  recomputeSkip();
+  let j=idx+1;
+  while(j<questions.length && skipSet.has(j)) j++;
+  if(j>=questions.length){submit();return;}
+  idx=j;render();
+}
+function goPrev(){
+  if(idx<=0){idx=-1;render();return;}
+  recomputeSkip();
+  let j=idx-1;
+  while(j>0 && skipSet.has(j)) j--;
+  idx=j;render();
+}
+function showHint(t){const h=document.getElementById('hint');if(h)h.textContent=t;}
+function clearHint(){const h=document.getElementById('hint');if(h)h.textContent='';}
+
+async function submit(){
+  app.innerHTML=`<div class="card intro"><div class="char-stage"><div class="char-blob"></div>${CHARACTER}</div>
+    <button class="btn btn-primary" disabled><span class="spin"></span>&nbsp; 제출하는 중이에요...</button></div>`;
+  topbar.style.display='none';
+  const payload={group,gCode,submittedAt:new Date().toISOString(),answers:{}};
+  questions.forEach((q,i)=>{
+    if(skipSet.has(i)){payload.answers[q.id]='(해당없음)';return;}
+    let v=answers[q.id];
+    if(Array.isArray(v)){
+      v=v.map(x=>x==='기타'&&etcText[q.id]?`기타: ${etcText[q.id]}`:x).join(', ');
+    }
+    payload.answers[q.id]=(v===undefined||v===null)?'':v;
+  });
+  try{
+    if(ENDPOINT&&!ENDPOINT.startsWith('PASTE')){
+      await fetch(ENDPOINT,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)});
+    }else{console.log('[미리보기] payload:',payload);await new Promise(r=>setTimeout(r,700));}
+    renderDone();
+  }catch(e){
+    app.innerHTML=`<div class="card intro"><div class="char-stage"><div class="char-blob"></div>${CHARACTER}</div>
+      <h1 style="font-size:20px;margin-top:12px;">앗, 잠시 문제가 생겼어요</h1>
+      <p style="color:var(--ink-soft);font-size:15px;">네트워크를 확인하고 다시 시도해 주세요.</p>
+      <button class="btn btn-primary" id="retry" style="margin-top:18px;">다시 제출하기</button></div>`;
+    document.getElementById('retry').onclick=submit;
+  }
+}
+function renderDone(){
+  app.innerHTML=`<div class="card done"><div class="char-stage"><div class="char-blob"></div>${CHARACTER}</div>
+    <h1>소중한 의견 감사합니다!</h1>
+    <p>라이더님 목소리 하나하나가<br>다음 혜택을 만드는 든든한 재료가 됩니다 💚</p>
+    <div class="foot">이제 창을 닫으셔도 좋아요.</div></div>`;
+  fireConfetti();
+}
+function fireConfetti(){
+  const wrap=document.getElementById('confetti');
+  const colors=['#2AC1BC','#39CFCA','#FF8A5B','#12A29D','#FFD9B0'];
+  for(let i=0;i<44;i++){
+    const c=document.createElement('div');c.className='cf';
+    c.style.background=colors[i%colors.length];c.style.left=Math.random()*100+'%';
+    const dx=(Math.random()*2-1)*140,rot=Math.random()*720-360,dur=1.6+Math.random()*1.1;
+    c.style.animation=`fall ${dur}s cubic-bezier(.3,.6,.4,1) ${Math.random()*.3}s forwards`;
+    c.style.setProperty('--dx',dx+'px');c.style.setProperty('--rot',rot+'deg');
+    wrap.appendChild(c);setTimeout(()=>c.remove(),(dur+.5)*1000);
+  }
+}
+const st=document.createElement('style');
+st.textContent=`@keyframes fall{0%{opacity:1;transform:translateY(-20px) translateX(0) rotate(0);}100%{opacity:0;transform:translateY(105vh) translateX(var(--dx)) rotate(var(--rot));}}`;
+document.head.appendChild(st);
+function escAttr(s){return String(s).replace(/"/g,'&quot;');}
+function escHtml(s){return String(s).replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function render(){idx<0?renderIntro():renderQuestion();setProgress();}
+render();
+</script>
+</body>
+</html>
