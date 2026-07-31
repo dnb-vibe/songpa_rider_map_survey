@@ -37,6 +37,8 @@
   @keyframes bob{0%,100%{transform:translateY(0);}50%{transform:translateY(-7px);}}
   .waving{transform-box:fill-box;transform-origin:70% 90%;animation:wave 2.4s ease-in-out infinite;}
   @keyframes wave{0%,60%,100%{transform:rotate(0);}70%{transform:rotate(-18deg);}80%{transform:rotate(6deg);}90%{transform:rotate(-14deg);}}
+  .heart{transform-box:fill-box;transform-origin:center;animation:beat 1.5s ease-in-out infinite;}
+  @keyframes beat{0%,100%{transform:scale(1);}15%{transform:scale(1.18);}30%{transform:scale(1);}45%{transform:scale(1.12);}}
   .intro h1{font-size:23px;font-weight:800;letter-spacing:-.4px;margin:14px 0 2px;color:var(--ink);}
   .intro .badge{display:inline-flex;align-items:center;gap:6px;background:var(--mint-wash);color:var(--mint-ink);font-size:12.5px;font-weight:700;padding:6px 13px;border-radius:99px;margin-bottom:4px;}
   .speech{text-align:left;background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:20px 19px;margin:20px 0 8px;font-size:15.5px;color:var(--ink-soft);position:relative;}
@@ -214,38 +216,37 @@ const SURVEYS = {
 /* ========== 캐릭터 (귀엽게 리뉴얼) ========== */
 const CHARACTER = `
 <svg class="char" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-  <ellipse cx="100" cy="176" rx="42" ry="7" fill="#0C6E6A" opacity="0.12"/>
-  <!-- body -->
-  <path d="M66 178 Q62 138 100 138 Q138 138 134 178 Z" fill="#2AC1BC"/>
-  <path d="M66 178 Q62 138 100 138 Q116 138 126 148 L74 172 Q68 176 66 178Z" fill="#39CFCA" opacity=".55"/>
-  <!-- scarf -->
-  <path d="M80 142 Q100 154 120 142 L118 151 Q100 160 82 151 Z" fill="#FF8A5B"/>
-  <!-- left arm -->
-  <path d="M72 150 Q56 158 55 176 Q55 182 61 181 Q67 179 68 173 Q71 160 78 156 Z" fill="#2AC1BC"/>
-  <!-- right arm waving -->
-  <g class="waving">
-    <path d="M128 150 Q148 148 156 132 Q159 126 153 123 Q147 123 143 129 Q137 142 126 144 Z" fill="#2AC1BC"/>
-    <circle cx="154" cy="125" r="9.5" fill="#FFE0BC"/>
+  <!-- heart (두근두근) -->
+  <g class="heart">
+    <path d="M100 44 Q93 34 84 39 Q77 43 84 53 Q91 62 100 68 Q109 62 116 53 Q123 43 116 39 Q107 34 100 44Z" fill="#FF8A5B"/>
+    <path d="M100 49 Q95 43 89 46 Q85 49 89 55 Q94 61 100 65 Q106 61 111 55 Q115 49 111 46 Q105 43 100 49Z" fill="#fff" opacity="0.22"/>
   </g>
-  <!-- head (big & round) -->
-  <circle cx="100" cy="90" r="46" fill="#FFE0BC"/>
-  <!-- cheeks -->
-  <circle cx="74" cy="100" r="8.5" fill="#FF8A5B" opacity=".42"/>
-  <circle cx="126" cy="100" r="8.5" fill="#FF8A5B" opacity=".42"/>
-  <!-- eyes (well below the helmet brim) -->
-  <ellipse cx="86" cy="94" rx="6" ry="7" fill="#26312F"/>
-  <ellipse cx="114" cy="94" rx="6" ry="7" fill="#26312F"/>
-  <circle cx="88.4" cy="91.4" r="2.1" fill="#fff"/>
-  <circle cx="116.4" cy="91.4" r="2.1" fill="#fff"/>
-  <!-- smile -->
-  <path d="M88 108 Q100 118 112 108" stroke="#26312F" stroke-width="3.6" fill="none" stroke-linecap="round"/>
-  <!-- helmet sits high, brim above the eyes -->
-  <path d="M58 74 A42 42 0 0 1 142 74 L142 78 L58 78 Z" fill="#12A29D"/>
-  <path d="M58 74 A42 42 0 0 1 142 74 Q100 68 58 74Z" fill="#2AC1BC"/>
-  <path d="M56 74 Q100 66 144 74 L144 80 Q100 73 56 80 Z" fill="#0C6E6A"/>
-  <!-- helmet top button -->
-  <circle cx="100" cy="46" r="5" fill="#FF8A5B"/>
-  <path d="M100 51 L100 60" stroke="#FF8A5B" stroke-width="3" stroke-linecap="round"/>
+  <!-- 공깃밥 -->
+  <ellipse cx="76" cy="172" rx="48" ry="7" fill="#0C6E6A" opacity="0.12"/>
+  <path d="M36 108 L116 108 L103 156 Q100 163 92 163 L60 163 Q52 163 49 156 Z" fill="#C4CCCF"/>
+  <path d="M36 108 L116 108 L113 120 L39 120 Z" fill="#D8DEE0"/>
+  <ellipse cx="76" cy="108" rx="40" ry="9" fill="#E4EAEC"/>
+  <path d="M40 106 Q53 88 76 86 Q99 88 112 106 Q95 114 76 114 Q57 114 40 106 Z" fill="#FBFEFD"/>
+  <path d="M46 104 Q60 92 76 91 Q92 92 106 104 Q92 110 76 110 Q60 110 46 104 Z" fill="#fff"/>
+  <g fill="#EDF1F2">
+    <ellipse cx="62" cy="101" rx="5" ry="2.6" transform="rotate(-20 62 101)"/>
+    <ellipse cx="77" cy="98" rx="5" ry="2.6" transform="rotate(10 77 98)"/>
+    <ellipse cx="91" cy="102" rx="5" ry="2.6" transform="rotate(-15 91 102)"/>
+    <ellipse cx="70" cy="105" rx="5" ry="2.6" transform="rotate(15 70 105)"/>
+    <ellipse cx="86" cy="106" rx="5" ry="2.6" transform="rotate(-8 86 106)"/>
+  </g>
+  <!-- 아이스 아메리카노 -->
+  <ellipse cx="136" cy="174" rx="34" ry="6" fill="#0C6E6A" opacity="0.12"/>
+  <path d="M114 96 L158 96 L152 168 Q151 175 144 175 L126 175 Q119 175 118 168 Z" fill="#EAF7F6" opacity="0.55"/>
+  <path d="M116 115 L156 115 L151 163 Q150 170 143 170 L127 170 Q120 170 119 163 Z" fill="#8B5A3C"/>
+  <path d="M114 96 L158 96 L156 115 L116 115 Z" fill="#A9694A"/>
+  <g fill="#fff" opacity="0.9">
+    <rect x="125" y="120" width="11" height="10" rx="2.2" transform="rotate(12 130 125)"/>
+    <rect x="138" y="130" width="10" height="9" rx="2.2" transform="rotate(-14 143 134)"/>
+    <rect x="126" y="139" width="9" height="8" rx="2.2" transform="rotate(6 130 143)"/>
+  </g>
+  <rect x="109" y="91" width="54" height="10" rx="3" fill="#FBFEFD" stroke="#2AC1BC" stroke-width="1.5"/>
+  <rect x="140" y="58" width="6" height="42" rx="3" fill="#2AC1BC"/>
 </svg>`;
 
 /* ========== 로직 ========== */
