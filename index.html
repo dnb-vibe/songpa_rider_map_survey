@@ -128,10 +128,10 @@ const MEAL_NONE = [
     opts:["배달 시작 전","피크 사이 짬이 날 때","배달을 마친 후","불규칙하다"] },
 ];
 
-const NEED = { id:"need", type:"checkbox", max:2, etc:true,
+const NEED = { id:"need", type:"radio",
   title:"앞으로 배달활동 중 제공받고 싶은 혜택을 넓힌다면?",
-  sub:"가장 필요한 혜택을 최대 2개까지 골라주세요",
-  opts:["식음(식당·카페)","정비(엔진오일 등)","주유","기타"] };
+  sub:"가장 필요한 혜택 하나만 골라주세요",
+  opts:["식음(식당·카페)","정비(엔진오일 등)","주유","기타"], etcRadio:true };
 
 const FREE = { id:"free", type:"text", optional:true,
   title:"마지막으로, 남겨주고 싶은 이야기가 있다면 적어주세요",
@@ -142,10 +142,24 @@ const GOOD = { id:"good", type:"checkbox", max:3, etc:true,
   sub:"가장 좋았던 점을 최대 3개까지 골라주세요",
   opts:["식비를 아낄 수 있어서","메뉴·가게 선택지가 좋아서","사용이 편해서","챙김받는 느낌이 들어서","시원한 가게에서 잠시 쉴 수 있어서","주 활동 지역에서 가까워서","기타"] };
 
-const IMPROVE = { id:"improve", type:"checkbox", max:3, etc:true,
+const IMPROVE = { id:"improve", type:"checkbox", max:3, etc:true, exclusive:"특별히 개선할 점 없이 만족했다",
   title:"개선이 필요한 점이 있다면?",
-  sub:"최대 3개까지 골라주세요",
-  opts:["제휴 가게(식당·카페)가 적다","사용 방법이 번거롭다","혜택 금액이 아쉽다","이용 시간대 제약이 있다","주 활동 지역에서 멀었다","기타"] };
+  sub:"최대 3개까지 골라주세요 (만족하셨다면 첫 항목 선택)",
+  opts:["특별히 개선할 점 없이 만족했다","제휴 가게(식당·카페)가 적다","사용 방법이 번거롭다","하루 사용 가능 횟수가 부족하다","가게당 할인 금액이 아쉽다","한 달만 제공하고 종료되어 아쉽다","이용 시간대 제약이 있다","주 활동 지역에서 멀었다","기타"] };
+
+// 소개 여부 + 이유 통합 (주관식)
+const SHARE = { id:"share", type:"text", optional:true,
+  title:"이 혜택을 주변 라이더에게 소개하셨나요?",
+  sub:"소개하셨다면 그 이유를, 안 하셨다면 안 하신 이유를 자유롭게 적어주세요 (선택)",
+  ph:"예) 좋아서 동료에게 알려줬어요 / 딱히 얘기할 일이 없었어요" };
+
+// 플랫폼 비중/선택 의향 (그룹별 문구 분기, 5점 척도)
+const PLATFORM_USER = { id:"platform", type:"radio",
+  title:"식사 배-네핏이 타 플랫폼보다 배민커넥트의 비중을 늘리고 싶은 마음이 들게 했나요?",
+  opts:["매우 그렇다","그렇다","보통이다","아니다","전혀 아니다"] };
+const PLATFORM_NONE = { id:"platform", type:"radio",
+  title:"향후 유사한 혜택이 제공된다면, 다른 플랫폼보다 배민커넥트를 더 우선적으로 선택할 의향이 있으신가요?",
+  opts:["매우 그렇다","그렇다","보통이다","아니다","전혀 아니다"] };
 
 /* ========== 그룹별 설문 ========== */
 const SURVEYS = {
@@ -164,10 +178,10 @@ const SURVEYS = {
       opts:["매우 편했다","대체로 편했다","보통이다","다소 불편했다","매우 불편했다"] },
     GOOD,
     IMPROVE,
-    { id:"share", type:"radio", title:"이 혜택을 주변 라이더에게 소개한 적 있으신가요?",
-      opts:["여러 번 있다","한두 번 있다","없다"] },
+    SHARE,
     ...MEAL,
     NEED,
+    PLATFORM_USER,
     { id:"area", type:"radio", title:"원래도 석촌동·송파동에서 주로 활동하시나요?",
       opts:["예, 주 활동 지역이다","가끔 오는 편이다","이 혜택을 계기로 오게 됐다"] },
     FREE,
@@ -184,10 +198,10 @@ const SURVEYS = {
     { id:"good", type:"checkbox", max:3, etc:true, title:"그럼에도 좋았던 점이 있다면?",
       sub:"최대 3개까지 골라주세요",
       opts:["식비를 아낄 수 있어서","메뉴·가게 선택지가 좋아서","사용이 편해서","챙김받는 느낌이 들어서","시원한 가게에서 잠시 쉴 수 있어서","주 활동 지역에서 가까워서","기타"] },
-    { id:"share", type:"radio", title:"이 혜택을 주변 라이더에게 소개한 적 있으신가요?",
-      opts:["있다","없다"] },
+    SHARE,
     ...MEAL,
     NEED,
+    PLATFORM_USER,
     { id:"area", type:"radio", title:"원래도 석촌동·송파동에서 주로 활동하시나요?",
       opts:["예","가끔 온다","이 혜택을 계기로 알게 됐다"] },
     FREE,
@@ -207,6 +221,7 @@ const SURVEYS = {
       opts:["제휴 가게(식당·카페) 확대","사용 방법 간소화","혜택 금액 상향","이용 시간대 확대","안내를 더 눈에 띄게","기타"] },
     ...MEAL_NONE,
     NEED,
+    PLATFORM_NONE,
     { id:"area", type:"radio", title:"원래도 석촌동·송파동에서 주로 활동하시나요?",
       opts:["예","가끔 온다","아니다"] },
     FREE,
@@ -321,6 +336,11 @@ function renderQuestion(){
   else if(q.type==='radio'){
     body=`<div class="opts">`+q.opts.map(o=>
       `<div class="opt ${saved===o?'sel':''}" data-v="${escAttr(o)}"><span class="mark"></span><span>${o}</span></div>`).join('')+`</div>`;
+    if(q.etcRadio){
+      const on=saved==='기타';
+      body+=`<div class="etc-input" id="etcBox" style="${on?'':'display:none'}">
+        <input type="text" id="etcInput" placeholder="기타 내용을 적어주세요" value="${etcText[q.id]?escAttr(etcText[q.id]):''}"></div>`;
+    }
   }
   else if(q.type==='checkbox'){
     const arr=Array.isArray(saved)?saved:[];
@@ -376,21 +396,31 @@ function bindQuestion(q){
     app.querySelectorAll('.opt').forEach(el=>{
       el.onclick=()=>{
         app.querySelectorAll('.opt').forEach(x=>x.classList.remove('sel'));
-        el.classList.add('sel');answers[q.id]=el.dataset.v;clearHint();updateNextState(q);
+        el.classList.add('sel');answers[q.id]=el.dataset.v;
+        if(q.etcRadio){const box=document.getElementById('etcBox');if(box)box.style.display=(el.dataset.v==='기타')?'':'none';}
+        clearHint();updateNextState(q);
       };
     });
+    if(q.etcRadio){const inp=document.getElementById('etcInput');if(inp)inp.oninput=()=>{etcText[q.id]=inp.value;};}
   }
   else if(q.type==='checkbox'){
     app.querySelectorAll('.opt').forEach(el=>{
       el.onclick=()=>{
         let arr=Array.isArray(answers[q.id])?answers[q.id]:[];
         const v=el.dataset.v;
+        const isExc=q.exclusive&&v===q.exclusive;
         if(arr.includes(v)){arr=arr.filter(x=>x!==v);}
         else{
-          if(q.max&&arr.length>=q.max){showHint(`최대 ${q.max}개까지 선택할 수 있어요`);return;}
-          arr.push(v);
+          if(isExc){arr=[v];}                       // 단독선택 항목 → 나머지 전부 해제
+          else{
+            if(q.exclusive) arr=arr.filter(x=>x!==q.exclusive); // 일반 항목 → 단독선택 해제
+            if(q.max&&arr.length>=q.max){showHint(`최대 ${q.max}개까지 선택할 수 있어요`);return;}
+            arr.push(v);
+          }
         }
-        answers[q.id]=arr;el.classList.toggle('sel');
+        answers[q.id]=arr;
+        // 화면 갱신: 배열 기준으로 sel 재적용
+        app.querySelectorAll('.opt').forEach(o=>o.classList.toggle('sel',arr.includes(o.dataset.v)));
         if(q.etc){const box=document.getElementById('etcBox');if(box)box.style.display=arr.includes('기타')?'':'none';}
         if(q.max)reflectMax(q);
         clearHint();updateNextState(q);
@@ -465,6 +495,8 @@ async function submit(){
     let v=answers[q.id];
     if(Array.isArray(v)){
       v=v.map(x=>x==='기타'&&etcText[q.id]?`기타: ${etcText[q.id]}`:x).join(', ');
+    } else if(v==='기타'&&etcText[q.id]){
+      v=`기타: ${etcText[q.id]}`;
     }
     payload.answers[q.id]=(v===undefined||v===null)?'':v;
   });
