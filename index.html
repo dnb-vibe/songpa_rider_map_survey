@@ -131,7 +131,11 @@ const MEAL_NONE = [
 const NEED = { id:"need", type:"radio",
   title:"앞으로 배달활동 중 제공받고 싶은 혜택을 넓힌다면?",
   sub:"가장 필요한 혜택 하나만 골라주세요",
-  opts:["식음(식당·카페)","정비(엔진오일 등)","주유","기타"], etcRadio:true };
+  opts:["식음(식당·카페)","정비(엔진오일 등)","주유","기타"], etcRadio:true,
+  followupIf:["식음(식당·카페)","정비(엔진오일 등)","주유"],
+  followupRequired:true,
+  followupLabel:"그 혜택을 고른 이유를 알려주세요",
+  followupPh:"예) 매일 쓰는 거라서 / 비용 부담이 커서" };
 
 const FREE = { id:"free", type:"text", optional:true,
   title:"마지막으로, 남겨주고 싶은 이야기가 있다면 적어주세요",
@@ -147,13 +151,18 @@ const IMPROVE = { id:"improve", type:"checkbox", max:3, etc:true, exclusive:"특
   sub:"최대 3개까지 골라주세요 (만족하셨다면 첫 항목 선택)",
   opts:["특별히 개선할 점 없이 만족했다","제휴 가게(식당·카페)가 적다","사용 방법이 번거롭다","하루 사용 가능 횟수가 부족하다","가게당 할인 금액이 아쉽다","한 달만 제공하고 종료되어 아쉽다","이용 시간대 제약이 있다","주 활동 지역에서 멀었다","기타"] };
 
-// 소개 여부(필수 객관식) + 이유(선택 주관식)
-const SHARE = { id:"share", type:"radio",
+// 소개 여부(필수) → 답에 따라 이유 객관식 분기(각각 필수)
+const SHARE_Q = { id:"share", type:"radio",
   title:"이 혜택을 주변 라이더에게 소개하셨나요?",
-  opts:["소개했다","소개하지 않았다"],
-  followupIf:["소개했다","소개하지 않았다"],
-  followupLabel:"이유를 자유롭게 적어주세요 (선택)",
-  followupPh:"예) 좋아서 동료에게 알려줬어요 / 딱히 얘기할 일이 없었어요" };
+  opts:["소개했다","소개하지 않았다"] };
+const SHARE_YES = { id:"share_why_yes", type:"radio", etcRadio:true,
+  title:"소개하신 이유는 무엇인가요?",
+  showIf:{qid:"share", val:"소개했다"},
+  opts:["혜택이 좋아서 알려주고 싶었다","처음 보는 혜택이라 신선해서","입장코드를 받은 지인이 있어서 같이 이용하려고","물어봐서 알려줬다","기타"] };
+const SHARE_NO = { id:"share_why_no", type:"radio", etcRadio:true,
+  title:"소개하지 않으신 이유는 무엇인가요?",
+  showIf:{qid:"share", val:"소개하지 않았다"},
+  opts:["주변에 입장코드를 받은 라이더가 없어서","선착순이라 알려주면 내 사용 기회가 줄어들 것 같아서","딱히 얘기할 기회가 없어서","소개할 만큼 좋진 않아서","기타"] };
 
 // 플랫폼 비중/선택 의향 (그룹별 문구 분기, 5점 척도)
 const PLATFORM_USER = { id:"platform", type:"radio",
@@ -179,11 +188,12 @@ const SURVEYS = {
     { id:"conv", type:"radio", title:"혜택 사용 방식은 편하셨나요?",
       opts:["매우 편했다","대체로 편했다","보통이다","다소 불편했다","매우 불편했다"],
       followupIf:["보통이다","다소 불편했다","매우 불편했다"],
-      followupLabel:"이용 중 어떤 점이 불편하셨는지 자유롭게 적어주세요",
+      followupRequired:true,
+      followupLabel:"이용 중 어떤 점이 불편하셨는지 알려주세요",
       followupPh:"예) 쿠폰 인식이 잘 안 됐어요 / 사용처를 찾기 어려웠어요" },
     GOOD,
     IMPROVE,
-    SHARE,
+    SHARE_Q, SHARE_YES, SHARE_NO,
     ...MEAL,
     NEED,
     PLATFORM_USER,
@@ -203,7 +213,7 @@ const SURVEYS = {
     { id:"good", type:"checkbox", max:3, etc:true, title:"그럼에도 좋았던 점이 있다면?",
       sub:"최대 3개까지 골라주세요",
       opts:["식비를 아낄 수 있어서","메뉴·가게 선택지가 좋아서","사용이 편해서","챙김받는 느낌이 들어서","시원한 가게에서 잠시 쉴 수 있어서","주 활동 지역에서 가까워서","기타"] },
-    SHARE,
+    SHARE_Q, SHARE_YES, SHARE_NO,
     ...MEAL,
     NEED,
     PLATFORM_USER,
@@ -414,7 +424,7 @@ function bindQuestion(q){
       };
     });
     if(q.etcRadio){const inp=document.getElementById('etcInput');if(inp)inp.oninput=()=>{etcText[q.id]=inp.value;};}
-    if(q.followupIf){const fi=document.getElementById('fuInput');if(fi)fi.oninput=()=>{etcText[q.id+'_fu']=fi.value;};}
+    if(q.followupIf){const fi=document.getElementById('fuInput');if(fi)fi.oninput=()=>{etcText[q.id+'_fu']=fi.value;updateNextState(q);};}
   }
   else if(q.type==='checkbox'){
     app.querySelectorAll('.opt').forEach(el=>{
@@ -460,7 +470,13 @@ function isAnswered(q){
   const v=answers[q.id];
   if(q.type==='checkbox')return Array.isArray(v)&&v.length>0;
   if(q.type==='text')return q.optional?true:(v&&v.trim().length>0);
-  return v!==undefined&&v!==null&&v!=='';
+  const base=v!==undefined&&v!==null&&v!=='';
+  // followup 필수: 조건에 해당하는 답을 골랐으면 사유 입력값도 있어야 완료
+  if(base&&q.followupRequired&&q.followupIf&&q.followupIf.includes(v)){
+    const fu=etcText[q.id+'_fu'];
+    if(!(fu&&fu.trim().length>0)) return false;
+  }
+  return base;
 }
 function updateNextState(q){
   const btn=document.getElementById('nextBtn');if(!btn)return;
@@ -476,12 +492,23 @@ function recomputeSkip(){
   skipSet=new Set();
   questions.forEach((q,i)=>{
     if(q.skipNextIf && answers[q.id]===q.skipNextIf) skipSet.add(i+1);
+    // showIf: {qid, val} — 지정 문항이 해당 답일 때만 표시, 아니면 건너뜀
+    if(q.showIf && answers[q.showIf.qid]!==q.showIf.val) skipSet.add(i);
   });
 }
 
 function goNext(){
   const q=questions[idx];
-  if(!(q.optional||isAnswered(q))){showHint('답변을 선택해 주세요');return;}
+  if(!(q.optional||isAnswered(q))){
+    // followup 필수인데 사유만 비어있는 경우 별도 안내
+    const v=answers[q.id];
+    if(v&&q.followupRequired&&q.followupIf&&q.followupIf.includes(v)){
+      showHint('사유를 입력해 주세요');
+    } else {
+      showHint('답변을 선택해 주세요');
+    }
+    return;
+  }
   recomputeSkip();
   let j=idx+1;
   while(j<questions.length && skipSet.has(j)) j++;
